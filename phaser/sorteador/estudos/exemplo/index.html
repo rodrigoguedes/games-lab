@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+
+<meta charset="utf-8">
+<title>Example</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.0.0/pixi.min.js"></script>
+
+<body>
+
+    <script>
+
+        // var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0x1099bb});
+        // document.body.appendChild(renderer.view);
+
+        var stage = new PIXI.Container(),
+            renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0x1099bb});
+
+        document.body.appendChild(renderer.view);
+
+        PIXI.loader
+            .add("images/black_ball.png")
+            .add("images/white_ball.png")
+            .load(setup);
+
+        var black_ball,
+            white_ball;
+
+        function setup() {
+
+            console.log("setup()");
+
+            black_ball = new PIXI.Sprite(PIXI.loader.resources["images/black_ball.png"].texture);
+            black_ball.position.x = 50;
+            black_ball.position.y = 50;
+            stage.addChild(black_ball);
+
+            white_ball = new PIXI.Sprite(PIXI.loader.resources["images/white_ball.png"].texture);
+            white_ball.position.x = 50;
+            white_ball.position.y = 200;
+            stage.addChild(white_ball);
+
+            gameLoop();
+            //renderer.render(stage);
+
+        }
+
+        function gameLoop(){
+            //Loop this function 60 times per second
+            requestAnimationFrame(gameLoop);
+            //Move the cat 1 pixel per frame
+            black_ball.x += 1;
+
+            white_ball.x += 3;
+            //Render the stage
+            renderer.render(stage);
+        }
+
+
+/*
+        var stage = new PIXI.Container();
+
+        PIXI.loader.resources["images/black_ball.png"];
+
+        //var ball = new PIXI.Sprite(PIXI.loader.resources["images/black_ball.png"].texture);
+
+        PIXI.loader
+                .add("images/cat.png")
+                .load(setup);
+
+
+        var texture = PIXI.Texture.fromImage('assets/black_ball.png');
+
+        var bunny = new PIXI.Sprite(texture);
+
+        bunny.anchor.x = 0.5;
+        bunny.anchor.y = 0.5;
+
+        bunny.position.x = 200;
+        bunny.position.y = 150;
+        */
+
+    </script>
+
+</body>

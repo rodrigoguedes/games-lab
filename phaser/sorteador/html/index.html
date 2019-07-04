@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+
+<meta charset="utf-8">
+<title>Example</title>
+<script src="phaser.min.js"></script>
+
+<body onload="create()">
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+        var participants;
+        var killers;
+        var explosions;
+        var fx;
+
+        var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+        function preload () {
+            game.load.image('black_ball', 'assets/images/black_ball.png');
+            game.load.image('white_ball', 'assets/images/white_ball.png');
+            game.load.audio('sfx', 'assets/sound/fx_mixdown.ogg');
+            game.load.spritesheet('kaboom', 'assets/images/explode.png', 128, 128);
+        }
+
+        function create () {
+
+            // World config
+            game.stage.backgroundColor = "#4488AA";
+
+            //Audio config
+            fx = game.add.audio('sfx');
+            fx.allowMultiple = true;
+            fx.addMarker('death', 1, 1.0);
+
+
+            participants = game.add.physicsGroup(Phaser.Physics.ARCADE);
+
+            for (var i = 0; i < 90; i++) {
+                var participant = participants.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(32, 200), 'white_ball');
+                participant.animations.add('spin', [0, 1, 2, 3]);
+                participant.play('spin', 20, true);
+                participant.body.velocity.set(game.rnd.integerInRange(-200, 200), game.rnd.integerInRange(-200, 200));
+            }
+
+            participants.setAll('body.collideWorldBounds', true);
+            participants.setAll('body.bounce.x', 1);
+            participants.setAll('body.bounce.y', 1);
+
+            killers = game.add.physicsGroup(Phaser.Physics.ARCADE);
+
+            for (var i = 0; i < 3; i++)
+            {
+                var killer = killers.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(32, 200), 'black_ball');
+                killer.animations.add('spin', [0, 1, 2, 3]);
+                killer.play('spin', 20, true);
+                killer.body.velocity.set(game.rnd.integerInRange(-200, 200), game.rnd.integerInRange(-200, 200));
+            }
+
+            killers.setAll('body.collideWorldBounds', true);
+            killers.setAll('body.bounce.x', 1);
+            killers.setAll('body.bounce.y', 1);
+
+            explosions = game.add.group();
+            explosions.createMultiple(30, 'kaboom');
+            explosions.forEach(setupInvader, this);
+
+            //game.physics.arcade.isPaused = true;
+        }
+
+        function setupInvader (invader) {
+            invader.anchor.x = 0.5;
+            invader.anchor.y = 0.5;
+            invader.animations.add('kaboom');
+        }        
+
+        function update() {
+            game.physics.arcade.overlap(killers, participants, collisionHandler, null, this);
+            game.physics.arcade.collide(participants);
+            game.physics.arcade.collide(killers);
+        }
+
+        function collisionHandler (killer, participant) {
+
+            participant.kill();
+
+            var explosion = explosions.getFirstExists(false);
+            explosion.reset(participant.body.x, participant.body.y);
+            explosion.play('kaboom', 30, false, true);
+
+            fx.play('death');
+
+        }
+
+    };
+
+    </script>
+
+</body>

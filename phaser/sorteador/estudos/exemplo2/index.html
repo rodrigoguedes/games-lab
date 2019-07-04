@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+
+<meta charset="utf-8">
+<title>Example</title>
+<script src="phaser.min.js"></script>
+
+<body>
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+        //  Note that this html file is set to pull down Phaser 2.5.0 from the JS Delivr CDN.
+        //  Although it will work fine with this tutorial, it's almost certainly not the most current version.
+        //  Be sure to replace it with an updated version before you start experimenting with adding your own code.
+
+        var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+        function preload () {
+            game.load.image('black_ball', 'images/black_ball.png');
+            game.load.image('white_ball', 'images/white_ball.png');
+
+            game.load.audio('sfx', 'sound/fx_mixdown.ogg');
+
+            game.load.spritesheet('kaboom', 'images/explode.png', 128, 128);
+        }
+
+        var participants;
+
+        var killers;
+
+        var explosions;
+
+        var fx;
+
+        function create () {
+
+            //	Here we set-up our audio sprite
+            fx = game.add.audio('sfx');
+            fx.allowMultiple = true;
+            fx.addMarker('death', 1, 1.0);
+
+            game.stage.backgroundColor = "#4488AA";
+
+            //var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'black_ball');
+            //logo.anchor.setTo(0.5, 0.5);
+
+
+/*
+            game.physics.startSystem(Phaser.Physics.ARCADE);
+
+            var blackBall = game.add.sprite(game.world.randomX, game.world.randomY, 'black_ball');
+
+            game.physics.arcade.enable(blackBall);
+            blackBall.body.velocity.setTo(200, 200);
+            blackBall.body.bounce.set(1);
+            blackBall.body.collideWorldBounds = true;
+
+            for (numero=1; numero<=100; numero++){
+
+                var whiteBall = game.add.sprite(game.world.randomX, game.world.randomY, 'white_ball');
+
+                game.physics.arcade.collide(blackBall, whiteBall);
+
+                game.physics.arcade.enable(whiteBall);
+                whiteBall.body.velocity.setTo(500, 500);
+                whiteBall.body.bounce.set(1);
+                whiteBall.body.collideWorldBounds = true;
+            }*/
+
+            participants = game.add.physicsGroup(Phaser.Physics.ARCADE);
+
+            for (var i = 0; i < 90; i++)
+            {
+                var participant = participants.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(32, 200), 'white_ball');
+                participant.animations.add('spin', [0, 1, 2, 3]);
+                participant.play('spin', 20, true);
+                participant.body.velocity.set(game.rnd.integerInRange(-200, 200), game.rnd.integerInRange(-200, 200));
+
+            }
+
+            participants.setAll('body.collideWorldBounds', true);
+            participants.setAll('body.bounce.x', 1);
+            participants.setAll('body.bounce.y', 1);
+
+            killers = game.add.physicsGroup(Phaser.Physics.ARCADE);
+
+            for (var i = 0; i < 3; i++)
+            {
+                var killer = killers.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(32, 200), 'black_ball');
+                killer.animations.add('spin', [0, 1, 2, 3]);
+                killer.play('spin', 20, true);
+                killer.body.velocity.set(game.rnd.integerInRange(-200, 200), game.rnd.integerInRange(-200, 200));
+            }
+
+            killers.setAll('body.collideWorldBounds', true);
+            killers.setAll('body.bounce.x', 1);
+            killers.setAll('body.bounce.y', 1);
+
+            explosions = game.add.group();
+            explosions.createMultiple(30, 'kaboom');
+            explosions.forEach(setupInvader, this);
+
+        }
+
+        function setupInvader (invader) {
+
+            invader.anchor.x = 0.5;
+            invader.anchor.y = 0.5;
+            invader.animations.add('kaboom');
+
+        }        
+
+        function update() {
+
+            game.physics.arcade.overlap(killers, participants, collisionHandler, null, this);
+
+            //sprite.body.velocity.x = 0;
+            //sprite.body.velocity.y = 0;
+
+            //game.debug.bodyInfo(sprite, 16, 24);
+
+            game.physics.arcade.collide(participants);
+
+            game.physics.arcade.collide(killers);
+
+        }
+
+        //  Called if the bullet hits one of the veg sprites
+        function collisionHandler (killer, participant) {
+
+            participant.kill();
+
+            var explosion = explosions.getFirstExists(false);
+            explosion.reset(participant.body.x, participant.body.y);
+            explosion.play('kaboom', 30, false, true);
+
+            fx.play('death');
+
+        }
+
+    };
+
+    </script>
+
+</body>
