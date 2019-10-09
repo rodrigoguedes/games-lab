@@ -1,0 +1,30 @@
+# Compiled class file
+java/*.class
+
+# Log file
+java/*.log
+
+# BlueJ files
+java/*.ctxt
+
+# Mobile Tools for Java (J2ME)
+java/.mtj.tmp/
+
+# Package Files #
+java/*.jar
+java/*.war
+java/*.nar
+java/*.ear
+java/*.zip
+java/*.tar.gz
+java/*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+java/hs_err_pid*
+
+java/target
+
+java/*.project
+java/\.settings
+
+java/\.classpath
