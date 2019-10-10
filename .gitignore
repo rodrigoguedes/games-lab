@@ -28,3 +28,7 @@ java/*.project
 java/\.settings
 
 java/\.classpath
+
+java/\.idea
+
+*.DS_Store
