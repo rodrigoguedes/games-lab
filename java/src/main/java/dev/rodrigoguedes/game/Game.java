@@ -17,14 +17,20 @@ public class Game extends Canvas implements Runnable {
 	private BufferedImage image;
 
 	private Spritesheet sheet;
-	private BufferedImage player;
+	private BufferedImage[] player;
+	private int frames = 0;
+	private int maxFrames = 20; //speed
+	private int curAnimation = 0;
+	private int maxAnimations = 2;//
 
 	private boolean isRunning = true;
 	private Thread thread;
 
 	public Game() {
 		this.sheet = new Spritesheet("/spritesheet.png");
-		this.player = sheet.getSprite(0, 0, 16, 16);
+		this.player = new BufferedImage[2];
+		this.player[0] = sheet.getSprite(0, 0, 16, 16);
+		this.player[1] = sheet.getSprite(0, 16, 16, 16);
 
 		setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		initFrame();
@@ -58,7 +64,14 @@ public class Game extends Canvas implements Runnable {
 	}
 	
 	private void tick() {
-//		System.out.println("Tick");
+		this.frames++;
+		if (this.frames > this.maxFrames) {
+			this.frames = 0;
+			this.curAnimation++;
+			if (this.curAnimation >= this.maxAnimations) {
+				this.curAnimation = 0;
+			}
+		}
 	}
 	
 	private void render() {
@@ -86,13 +99,22 @@ public class Game extends Canvas implements Runnable {
 //		g.setColor(Color.BLUE);
 //		g.drawString("Hello World!", 5, 110);
 
-		//Object Player
-		g.setColor(new Color(0, 0, 0));
-		g.drawImage(player, 110, 30, null);
-		g.drawImage(player, 10, 30, null);
-		g.drawImage(player, 20, 20, null);
-		g.drawImage(player, 40, 40, null);
+//		//Object Players
+//		g.setColor(new Color(0, 0, 0));
+//		g.drawImage(player, 110, 30, null);
+//		g.drawImage(player, 10, 30, null);
+//		g.drawImage(player, 20, 20, null);
+//		g.drawImage(player, 40, 40, null);
 
+//		//Rotate
+//		Graphics2D g2 = (Graphics2D) g;
+//		g2.rotate(Math.toRadians(45), 90, 90);
+//		g.drawImage(player, 40, 40, null);
+
+		//Animation
+		Graphics2D g2 = (Graphics2D) g;
+		g.drawImage(player[curAnimation], 40, 40, null);
+		
 		g.dispose();
 		g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
