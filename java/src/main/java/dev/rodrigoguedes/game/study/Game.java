@@ -1,4 +1,4 @@
-package dev.rodrigoguedes.game;
+package dev.rodrigoguedes.game.study;
 
 import javax.swing.*;
 import java.awt.*;
