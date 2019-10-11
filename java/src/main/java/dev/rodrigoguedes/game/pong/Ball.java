@@ -36,8 +36,12 @@ public class Ball {
 
         if (y >= Game.HEIGHT) {
             //Enemy Win
+            new Game();
+            return;
         } else if (y < 0) {
             //Player Win
+            new Game();
+            return;
         }
 
         Rectangle bounds = new Rectangle((int)(x+(dx*speed)), (int)(y+(dy*speed)), width, height);

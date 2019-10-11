@@ -11,40 +11,28 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 	private static final long serialVersionUID = 1L;
 
-	private JFrame frame;
 	public static final int WIDTH = 240;
 	public static final int HEIGHT = 160;
 	public static final int SCALE = 3;
 
-	private boolean isRunning = true;
-	private Thread thread;
+	private static boolean isRunning = true;
+	private static Thread thread;
 
-	private Player player;
-	private Enemy enemy;
-	private Ball ball;
+	private static Player player;
+	private static Enemy enemy;
+	private static Ball ball;
 
 	private BufferedImage layer;
 
 	public Game() {
 		this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		this.addKeyListener(this);
-		initFrame();
 
 		this.player = new Player(100, HEIGHT - 10);
 		this.enemy = new Enemy(100, 0);
 		this.ball = new Ball(100, HEIGHT / 2 - 1);
 
 		this.layer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	}
-
-	private void initFrame() {
-		this.frame = new JFrame("Pong");
-		this.frame.add(this);
-		this.frame.setResizable(false);
-		this.frame.pack();
-		this.frame.setLocationRelativeTo(null);
-		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.frame.setVisible(true);
 	}
 
 	private void tick() {
@@ -146,6 +134,15 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 	public static void main(String[] args) {
 		Game game = new Game();
+
+		JFrame frame = new JFrame("Pong");
+		frame.add(game);
+		frame.setResizable(false);
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+
 		game.start();
 	}
 }
