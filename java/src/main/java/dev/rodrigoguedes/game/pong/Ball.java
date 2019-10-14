@@ -26,7 +26,7 @@ public class Ball {
         dy = Math.sin(Math.toRadians(angle));
     }
 
-    public void tick(Player player, Enemy enemy) {
+    public void tick(Game game, Player player, Enemy enemy) {
 
         if (x+ (dx*speed) + width >= Game.WIDTH) {
             this.dx *= -1;
@@ -36,11 +36,13 @@ public class Ball {
 
         if (y >= Game.HEIGHT) {
             //Enemy Win
-            new Game();
+//            new Game();
+            game.startPlay();
             return;
         } else if (y < 0) {
             //Player Win
-            new Game();
+//            new Game();
+            game.startPlay();
             return;
         }
 

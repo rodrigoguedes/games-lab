@@ -18,9 +18,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private static boolean isRunning = true;
 	private static Thread thread;
 
-	private static Player player;
-	private static Enemy enemy;
-	private static Ball ball;
+	private Player player;
+	private Enemy enemy;
+	private Ball ball;
 
 	private BufferedImage layer;
 
@@ -28,17 +28,21 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		this.addKeyListener(this);
 
+		startPlay();
+
+		this.layer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+	}
+
+	public void startPlay() {
 		this.player = new Player(100, HEIGHT - 10);
 		this.enemy = new Enemy(100, 0);
 		this.ball = new Ball(100, HEIGHT / 2 - 1);
-
-		this.layer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	}
 
 	private void tick() {
 		player.tick();
 		enemy.tick(ball);
-		ball.tick(player, enemy);
+		ball.tick(this, player, enemy);
 	}
 
 	private void render() {
