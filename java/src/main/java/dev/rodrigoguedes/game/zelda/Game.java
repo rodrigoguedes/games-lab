@@ -27,6 +27,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private List<Entity> entities;
 	private Spritesheet spritesheet;
 
+	private Player player;
+
 	private BufferedImage layer;
 
 	public Game() {
@@ -37,7 +39,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		this.entities = new ArrayList<Entity>();
 		spritesheet = new Spritesheet("/zelda/character.png");
 
-		Player player = new Player(0,0, 16, 32, spritesheet.getSprite(0, 0, 16, 32));
+		this.player = new Player(0,0, 16, 32, spritesheet.getSprite(0, 0, 16, 32));
 		entities.add(player);
 	}
 
@@ -122,26 +124,34 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-//		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-//			player.moveToRight();
-//		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-//			player.moveToLeft();
-//		}
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			player.moveToRight();
+		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			player.moveToLeft();
+		} else if (e.getKeyCode() == KeyEvent.VK_UP) {
+			player.moveToUp();
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			player.moveToDown();
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-//		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-//			player.stopMoveToRight();
-//		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-//			player.stopMoveToLeft();
-//		}
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			player.stopMoveToRight();
+		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			player.stopMoveToLeft();
+		} else if (e.getKeyCode() == KeyEvent.VK_UP) {
+			player.stopMoveToUp();
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			player.stopMoveToDown();
+		}
 	}
 
 	public static void main(String[] args) {
 		Game game = new Game();
 
-		JFrame frame = new JFrame("Pong");
+		JFrame frame = new JFrame("Zelda");
 		frame.add(game);
 		frame.setResizable(false);
 		frame.pack();
