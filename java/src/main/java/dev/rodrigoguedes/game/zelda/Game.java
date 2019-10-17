@@ -3,6 +3,7 @@ package dev.rodrigoguedes.game.zelda;
 import dev.rodrigoguedes.game.zelda.entities.Entity;
 import dev.rodrigoguedes.game.zelda.entities.Player;
 import dev.rodrigoguedes.game.zelda.graphics.Spritesheet;
+import dev.rodrigoguedes.game.zelda.world.World;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,14 +27,19 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 	private List<Entity> entities;
 	public static final Spritesheet spritesheet = new Spritesheet("/zelda/character.png");
+    public static final Spritesheet spritesheetWorld = new Spritesheet("/zelda/Overworld.png");
 
 	private Player player;
 
 	private BufferedImage layer;
 
+	private World world;
+
 	public Game() {
 		this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		this.addKeyListener(this);
+
+		this.world = new World("/zelda/level1.png");
 
 		this.layer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		this.entities = new ArrayList<Entity>();
@@ -58,6 +64,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		Graphics graphics = layer.getGraphics();
 		graphics.setColor(new Color(19, 19, 19));
 		graphics.fillRect(0, 0 , WIDTH, HEIGHT);
+
+        this.world.render(graphics);
 
 		for (Entity entity: entities) {
 			entity.render(graphics);
