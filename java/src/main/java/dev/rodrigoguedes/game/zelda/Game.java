@@ -25,7 +25,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private static Thread thread;
 
 	private List<Entity> entities;
-	private Spritesheet spritesheet;
+	public static final Spritesheet spritesheet = new Spritesheet("/zelda/character.png");
 
 	private Player player;
 
@@ -37,7 +37,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 		this.layer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		this.entities = new ArrayList<Entity>();
-		spritesheet = new Spritesheet("/zelda/character.png");
 
 		this.player = new Player(0,0, 16, 32, spritesheet.getSprite(0, 0, 16, 32));
 		entities.add(player);
