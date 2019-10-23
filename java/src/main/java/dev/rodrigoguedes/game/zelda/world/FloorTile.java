@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 
 public class FloorTile extends Tile {
 
-    public static BufferedImage TILE_FLOOR = Game.spritesheetWorld.getSprite(0, 0, 16, 16);
+    public static BufferedImage TILE_FLOOR = Game.spritesheetWorld.getSprite(16 * 8, 16 * 4, 16, 16);
 
     public FloorTile(int x, int y, BufferedImage sprite) {
         super(x, y, sprite);

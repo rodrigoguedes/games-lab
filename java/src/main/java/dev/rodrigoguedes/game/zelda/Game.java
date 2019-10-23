@@ -26,8 +26,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private static Thread thread;
 
 	private List<Entity> entities;
-	public static final Spritesheet spritesheet = new Spritesheet("/zelda/character.png");
-    public static final Spritesheet spritesheetWorld = new Spritesheet("/zelda/Overworld.png");
+	public static final Spritesheet spritesheet = new Spritesheet("/zelda/16x16Sprites.png");
+    public static final Spritesheet spritesheetWorld = new Spritesheet("/zelda/16x16Sprites.png");
 
 	private Player player;
 

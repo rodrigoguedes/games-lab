@@ -21,9 +21,9 @@ public class Player extends Entity {
     private int speed = 1;
 
     private int frames = 0;
-    private int maxFrames = 5;
+    private int maxFrames = 7;
     private int index = 0;
-    private int maxIndex = 3;
+    private int maxIndex = 2;
     private boolean moved = false;
     
     private BufferedImage[] rightPlayer = new BufferedImage[4];
@@ -35,19 +35,19 @@ public class Player extends Entity {
         super(x, y, width, height, sprite);
 
         for (int i = 0; i < 4; i++) {
-        	rightPlayer[i] = Game.spritesheet.getSprite(0 + (i * 16), 32, 16, 32);
+        	rightPlayer[i] = Game.spritesheet.getSprite((i * 16) + (16 * 1), (16 * 5), 16, 16);
 		}
 
         for (int i = 0; i < 4; i++) {
-        	leftPlayer[i] = Game.spritesheet.getSprite(0 + (i * 16), 96, 16, 32);
+        	leftPlayer[i] = Game.spritesheet.getSprite((i * 16) + (16 * 6), (16 * 8), 16, 16);
 		}
         
         for (int i = 0; i < 4; i++) {
-        	upPlayer[i] = Game.spritesheet.getSprite(0 + (i * 16), 64, 16, 32);
+        	upPlayer[i] = Game.spritesheet.getSprite((i * 16) + (16 * 7), (16 * 5), 16, 16);
 		}
         
         for (int i = 0; i < 4; i++) {
-        	downPlayer[i] = Game.spritesheet.getSprite(0 + (i * 16), 0, 16, 32);
+        	downPlayer[i] = Game.spritesheet.getSprite((i * 16) + (16 * 4), (16 * 5), 16, 16);
 		}        
     }
 
