@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import dev.rodrigoguedes.game.zelda.Game;
+import dev.rodrigoguedes.game.zelda.world.Camera;
+import dev.rodrigoguedes.game.zelda.world.World;
 
 public class Player extends Entity {
 
@@ -31,8 +33,8 @@ public class Player extends Entity {
     private BufferedImage[] upPlayer = new BufferedImage[4];
     private BufferedImage[] downPlayer = new BufferedImage[4];
     
-    public Player(int x, int y, int width, int height, BufferedImage sprite) {
-        super(x, y, width, height, sprite);
+    public Player(int x, int y, int width, int height, BufferedImage sprite, Camera camera, World world) {
+        super(x, y, width, height, sprite, camera, world);
 
         for (int i = 0; i < 4; i++) {
         	rightPlayer[i] = Game.spritesheet.getSprite((i * 16) + (16 * 1), (16 * 5), 16, 16);
@@ -72,12 +74,6 @@ public class Player extends Entity {
             this.setY(this.getY() + speed);
         }
 
-        if (this.getX() + this.getWidth() > Game.WIDTH) {
-            this.setX(Game.WIDTH - this.getWidth());
-        } else if (this.getX() < 0) {
-            this.setX(0);
-        }
-        
         if (moved) {
         	this.frames++;
         	if (this.frames == this.maxFrames) {
@@ -88,33 +84,37 @@ public class Player extends Entity {
         		}
         	}
         }
+
+        this.getCamera().setX(Camera.clamp(this.getX() - (Game.WIDTH/2), 0, this.getWorld().getWidth() * 16 - Game.WIDTH));
+        this.getCamera().setY(Camera.clamp(this.getY() - (Game.HEIGHT/2),0, this.getWorld().getHeight() * 16 - Game.HEIGHT));
     }
     
     @Override
     public void render(Graphics graphics) {
+
     	if (dir == right_dir) {
-    	    if (moved) {    		
-    	    	graphics.drawImage(rightPlayer[index], getX(), getY(), null);
+    	    if (moved) {
+    	    	graphics.drawImage(rightPlayer[index], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
     	    } else {
-    	    	graphics.drawImage(rightPlayer[0], getX(), getY(), null);
+    	    	graphics.drawImage(rightPlayer[0], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
     	    }
     	} else if (dir == left_dir) {
     		if (moved) {
-    			graphics.drawImage(leftPlayer[index], getX(), getY(), null);
+    			graphics.drawImage(leftPlayer[index], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
     		} else {
-    			graphics.drawImage(leftPlayer[0], getX(), getY(), null);
+    			graphics.drawImage(leftPlayer[0], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
     		}
     	} else if (dir == up_dir) {
     		if (moved) {
-    			graphics.drawImage(upPlayer[index], getX(), getY(), null);
+    			graphics.drawImage(upPlayer[index], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
     		} else {
-    			graphics.drawImage(upPlayer[0], getX(), getY(), null);
+    			graphics.drawImage(upPlayer[0], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
     		}
     	} else if (dir == down_dir) {
     		if (moved) {
-    			graphics.drawImage(downPlayer[index], getX(), getY(), null);
+    			graphics.drawImage(downPlayer[index], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
     		} else {
-    			graphics.drawImage(downPlayer[0], getX(), getY(), null);
+    			graphics.drawImage(downPlayer[0], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
     		}
     	}
     }

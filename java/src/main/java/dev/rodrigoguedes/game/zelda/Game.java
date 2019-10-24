@@ -3,6 +3,7 @@ package dev.rodrigoguedes.game.zelda;
 import dev.rodrigoguedes.game.zelda.entities.Entity;
 import dev.rodrigoguedes.game.zelda.entities.Player;
 import dev.rodrigoguedes.game.zelda.graphics.Spritesheet;
+import dev.rodrigoguedes.game.zelda.world.Camera;
 import dev.rodrigoguedes.game.zelda.world.World;
 
 import javax.swing.*;
@@ -25,27 +26,28 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private static boolean isRunning = true;
 	private static Thread thread;
 
-	private List<Entity> entities;
 	public static final Spritesheet spritesheet = new Spritesheet("/zelda/16x16Sprites.png");
     public static final Spritesheet spritesheetWorld = new Spritesheet("/zelda/16x16Sprites.png");
 
-	private Player player;
-
 	private BufferedImage layer;
 
+	private Player player;
 	private World world;
+	private Camera camera;
+	private List<Entity> entities;
 
 	public Game() {
 		this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		this.addKeyListener(this);
 
-		this.world = new World("/zelda/level1.png");
-
 		this.layer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+
+		this.camera = new Camera();
 		this.entities = new ArrayList<Entity>();
 
-		this.player = new Player(0,0, 16, 32, spritesheet.getSprite(0, 0, 16, 32));
-		entities.add(player);
+		this.world = new World("/zelda/level1.png", this.entities, camera);
+		this.player = new Player(16,16, 16, 32, spritesheet.getSprite(0, 0, 16, 32), camera, world);
+		this.entities.add(player);
 	}
 
 	private void tick() {
@@ -168,4 +170,5 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 		game.start();
 	}
+
 }
