@@ -64,6 +64,11 @@ public class World {
             e.printStackTrace();
         }
     }
+    
+    public Player getPlayer() {
+    	Entity entity = this.entities.stream().filter(e -> e instanceof Player).findFirst().get();
+    	return (Player) entity;
+    }
 
     public boolean isFree(int xNext, int yNext) {
         // TODO replace all code from 16 to const TILE_SIZE=16
@@ -102,6 +107,8 @@ public class World {
             }
         }
     }
+    
+    
 
     public int getWidth() {
         return width;

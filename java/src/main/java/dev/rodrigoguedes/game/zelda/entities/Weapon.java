@@ -6,7 +6,7 @@ import dev.rodrigoguedes.game.zelda.world.World;
 
 import java.awt.image.BufferedImage;
 
-public class Weapon extends Enemy {
+public class Weapon extends Entity {
 
     public static final BufferedImage WEAPON_EN = Game.spritesheetWorld.getSprite(16 * 7, 16 * 7, 16, 16);
 
