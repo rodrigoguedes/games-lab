@@ -65,6 +65,26 @@ public class World {
         }
     }
 
+    public boolean isFree(int xNext, int yNext) {
+        // TODO replace all code from 16 to const TILE_SIZE=16
+        int x1 = xNext / 16;
+        int y1 = yNext / 16;
+
+        int x2 = (xNext + 16 - 1) / 16;
+        int y2 = yNext / 16;
+
+        int x3 = xNext / 16;
+        int y3 = (yNext + 16 - 1) / 16;
+
+        int x4 = (xNext + 16 - 1) / 16;
+        int y4 = (yNext + 16 - 1) / 16;
+
+        return !((tiles[x1 + (y1 * this.width)] instanceof WallTile) ||
+                (tiles[x2 + (y2 * this.width)] instanceof WallTile) ||
+                (tiles[x3 + (y3 * this.width)] instanceof WallTile) ||
+                (tiles[x4 + (y4 * this.width)] instanceof WallTile));
+    }
+
     public void render (Graphics graphics) {
         int xStart = this.camera.getX() >> 4;
         int yStart = this.camera.getY() >> 4;

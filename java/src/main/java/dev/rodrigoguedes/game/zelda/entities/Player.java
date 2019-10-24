@@ -56,19 +56,19 @@ public class Player extends Entity {
     @Override
     public void tick() {
     	this.moved = false;
-        if (right) {
+        if (right && this.getWorld().isFree(this.getX() + speed, this.getY())) {
         	this.moved = true;
         	this.dir = right_dir;
             this.setX(this.getX() + speed);
-        } else if (left) {
+        } else if (left && this.getWorld().isFree(this.getX() - speed, this.getY())) {
         	this.moved = true;
         	this.dir = left_dir;
             this.setX(this.getX() - speed);
-        } else if (up) {
+        } else if (up && this.getWorld().isFree(this.getX(), this.getY() - speed)) {
         	this.moved = true;
         	this.dir = up_dir;
             this.setY(this.getY() - speed);
-        } else if (down) {
+        } else if (down && this.getWorld().isFree(this.getX(), this.getY() + speed)) {
         	this.moved = true;
         	this.dir = down_dir;
             this.setY(this.getY() + speed);
