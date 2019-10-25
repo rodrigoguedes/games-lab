@@ -14,6 +14,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Game extends Canvas implements Runnable, KeyListener {
 
@@ -35,6 +36,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private World world;
 	private Camera camera;
 	private List<Entity> entities;
+
+	public static final Random rand = new Random();
 
 	public Game() {
 		this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));

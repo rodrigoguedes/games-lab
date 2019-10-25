@@ -7,6 +7,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class World {
@@ -17,10 +18,13 @@ public class World {
     private int height;
 
     private List<Entity> entities;
+    private List<Enemy> enemies;
+
     private Camera camera;
 
     public World(String path, List<Entity> entities, Camera camera) {
         try {
+            this.enemies = new ArrayList<>();
             this.entities = entities;
             this.camera = camera;
 
@@ -46,7 +50,9 @@ public class World {
                         tiles[x + (y * width)] = new WallTile(x * 16, y * 16, WallTile.TILE_WALL, camera);
                     } else if (currentPixel == 0xFFff0000) {
                         //Enemy
-                        this.entities.add(new Enemy(x * 16, y * 16, 16, 16, Enemy.ENEMY_EN, camera, this));
+                        Enemy enemy = new Enemy(x * 16, y * 16, 16, 16, Enemy.ENEMY_EN, camera, this);
+                        this.entities.add(enemy);
+                        this.enemies.add(enemy);
                     } else if (currentPixel == 0xFFFF6A00) {
                         //Weapon
                         this.entities.add(new Weapon(x * 16, y * 16, 16, 16, Weapon.WEAPON_EN, camera, this));
@@ -68,6 +74,10 @@ public class World {
     public Player getPlayer() {
     	Entity entity = this.entities.stream().filter(e -> e instanceof Player).findFirst().get();
     	return (Player) entity;
+    }
+
+    public List<Enemy> getEnemies() {
+        return this.enemies;
     }
 
     public boolean isFree(int xNext, int yNext) {
