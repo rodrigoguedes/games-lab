@@ -3,6 +3,7 @@ package dev.rodrigoguedes.game.zelda;
 import dev.rodrigoguedes.game.zelda.entities.Entity;
 import dev.rodrigoguedes.game.zelda.entities.Player;
 import dev.rodrigoguedes.game.zelda.graphics.Spritesheet;
+import dev.rodrigoguedes.game.zelda.graphics.UI;
 import dev.rodrigoguedes.game.zelda.world.Camera;
 import dev.rodrigoguedes.game.zelda.world.World;
 
@@ -37,6 +38,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private Camera camera;
 	private List<Entity> entities;
 
+	private UI ui;
+
 	public static final Random rand = new Random();
 
 	public Game() {
@@ -49,8 +52,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		this.entities = new ArrayList<Entity>();
 
 		this.world = new World("/zelda/level1.png", this.entities, camera);
+
 		this.player = new Player(16,16, 16, 32, spritesheet.getSprite(0, 0, 16, 32), camera, world);
 		this.entities.add(player);
+		this.ui = new UI(world);
 	}
 
 	private void tick() {
@@ -75,6 +80,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		for (Entity entity: entities) {
 			entity.render(graphics);
 		}
+
+		ui.render(graphics);
 
 		graphics.dispose();
 		graphics = bs.getDrawGraphics();

@@ -27,6 +27,9 @@ public class Player extends Entity {
     private int index = 0;
     private int maxIndex = 2;
     private boolean moved = false;
+
+    private double life = 100;
+    private double maxLife = 100;
     
     private BufferedImage[] rightPlayer = new BufferedImage[4];
     private BufferedImage[] leftPlayer = new BufferedImage[4];
@@ -88,7 +91,21 @@ public class Player extends Entity {
         this.getCamera().setX(Camera.clamp(this.getX() - (Game.WIDTH/2), 0, this.getWorld().getWidth() * 16 - Game.WIDTH));
         this.getCamera().setY(Camera.clamp(this.getY() - (Game.HEIGHT/2),0, this.getWorld().getHeight() * 16 - Game.HEIGHT));
     }
-    
+
+    public void checkCollisionLifePack(){
+        for(int i = 0; i < Game.entities.size(); i++){
+            Entity atual = Game.entities.get(i);
+            if(atual instanceof Lifepack) {
+                if(Entity.isColidding(this, atual)) {
+                    life+=10;
+                    if(life > 100)
+                        life = 100;
+                    Game.entities.remove(atual);
+                }
+            }
+        }
+    }
+
     @Override
     public void render(Graphics graphics) {
 
@@ -117,6 +134,22 @@ public class Player extends Entity {
     			graphics.drawImage(downPlayer[0], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
     		}
     	}
+    }
+
+    public double getLife() {
+        return life;
+    }
+
+    public void setLife(double life) {
+        this.life = life;
+    }
+
+    public double getMaxLife() {
+        return maxLife;
+    }
+
+    public void setMaxLife(double maxLife) {
+        this.maxLife = maxLife;
     }
 
     public void moveToRight() {

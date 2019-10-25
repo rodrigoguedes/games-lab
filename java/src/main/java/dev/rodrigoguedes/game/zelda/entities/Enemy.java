@@ -13,11 +13,6 @@ public class Enemy extends Entity {
     
     private int speed = 1;
 
-    private int maskX = 0;
-	private int maskY = 0;
-	private int maskW = 0;
-	private int maskH = 0;
-
 	private int frames = 0;
 	private int maxFrames = 20;
 	private int index = 0;
@@ -35,6 +30,7 @@ public class Enemy extends Entity {
     @Override
     public void tick() {
 //    	if (Game.rand.nextInt(100) < 30) {
+		if (!isCollidingWithPlayer()) {
 			if (getX() < this.getWorld().getPlayer().getX() && this.getWorld().isFree(getX() + this.speed, getY())
 				&& !isColliding(getX() + this.speed, getY())) {
 
@@ -56,7 +52,17 @@ public class Enemy extends Entity {
 
 				this.setY(this.getY() - this.speed);
 			}
-//		}
+		} else {
+			Player player = this.getWorld().getPlayer();
+			if (Game.rand.nextInt(100) < 10) {
+				player.setLife(player.getLife() - 1);
+				System.out.println(player.getLife());
+				if (player.getLife() <= 0) {
+					System.out.println("Gamer Over....");
+				}
+			}
+		}
+
 
 		this.frames++;
 		if (this.frames == this.maxFrames) {
@@ -68,14 +74,20 @@ public class Enemy extends Entity {
 		}
     }
 
+	public boolean isCollidingWithPlayer() {
+		Rectangle enemyCurrent = new Rectangle(this.getX() + this.getMaskX(), this.getY() + this.getMaskY(), this.getMaskW(), this.getMaskH());
+		Rectangle player = new Rectangle(getWorld().getPlayer().getX(), getWorld().getPlayer().getY(), 16, 16);
+		return enemyCurrent.intersects(player);
+	}
+
     public boolean isColliding(int xNext, int yNext) {
-		Rectangle enemyCurrent = new Rectangle(xNext + maskX, yNext + maskY, 16 + maskW, 16 + maskH);
+		Rectangle enemyCurrent = new Rectangle(xNext + this.getMaskX(), yNext + this.getMaskY(), this.getMaskW(), this.getMaskH());
 		for (int i = 0; i < getWorld().getEnemies().size(); i++) {
 			Enemy e = getWorld().getEnemies().get(i);
 			if (e == this) {
 				continue;
 			}
-			Rectangle targetEnemy = new Rectangle(e.getX() + maskX, e.getY() + maskY, 16 + maskW, 16 + maskH);
+			Rectangle targetEnemy = new Rectangle(e.getX() + this.getMaskX(), e.getY() + this.getMaskY(), this.getMaskW(), this.getMaskH());
 			if (enemyCurrent.intersects(targetEnemy)) {
 				return true;
 			}
@@ -89,7 +101,7 @@ public class Enemy extends Entity {
     	graphics.drawImage(sprites[index], this.getX()- getCamera().getX(), this.getY()- getCamera().getY(), null);
 
 		// To debug
-//		graphics.setColor(Color.BLUE);
-//		graphics.fillRect((this.getX() + maskX) - getCamera().getX(), (this.getY() + maskY) - getCamera().getY(), 16 + maskW, 16 + maskH);
+		graphics.setColor(Color.BLUE);
+		graphics.fillRect((this.getX() + this.getMaskX()) - getCamera().getX(), (this.getY() + this.getMaskY()) - getCamera().getY(), this.getMaskW(), this.getMaskH());
 	}
 }

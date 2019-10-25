@@ -19,12 +19,14 @@ public class World {
 
     private List<Entity> entities;
     private List<Enemy> enemies;
+    private List<LifePack> lifePackages;
 
     private Camera camera;
 
     public World(String path, List<Entity> entities, Camera camera) {
         try {
             this.enemies = new ArrayList<>();
+            this.lifePackages = new ArrayList<>();
             this.entities = entities;
             this.camera = camera;
 
@@ -58,7 +60,12 @@ public class World {
                         this.entities.add(new Weapon(x * 16, y * 16, 16, 16, Weapon.WEAPON_EN, camera, this));
                     } else if (currentPixel == 0xFFFF7F7F) {
                         //Life Pack
-                        this.entities.add(new LifePack(x * 16, y * 16, 16, 16, LifePack.LIFEPACK_EN, camera, this));
+                        LifePack lifePack = new LifePack(x * 16, y * 16, 16, 16, LifePack.LIFEPACK_EN, camera, this);
+                        lifePack.setMaskX(4);
+                        lifePack.setMaskY(4);
+                        lifePack.setMaskW(4);
+                        lifePack.setMaskH(4);
+                        this.lifePackages.add(lifePack);
                     } else if (currentPixel == 0xFFFFD800) {
                         //Bullet
                         this.entities.add(new Bullet(x * 16, y * 16, 16, 16, Bullet.BULLET_EN, camera, this));
@@ -78,6 +85,10 @@ public class World {
 
     public List<Enemy> getEnemies() {
         return this.enemies;
+    }
+
+    public List<LifePack> getLifePackages() {
+        return lifePackages;
     }
 
     public boolean isFree(int xNext, int yNext) {
