@@ -39,16 +39,16 @@ public class Entity {
     }
 
     public boolean isColidding(Entity e1,Entity e2){
-        Rectangle e1Mask = new Rectangle(getX() + getMaskX(),e1.getY() + getMaskY(),getMaskW(), getMaskH());
-        Rectangle e2Mask = new Rectangle(getX() + getMaskX(),e2.getY() + getMaskY(),getMaskW(), getMaskH());
+        Rectangle e1Mask = new Rectangle(e1.getX() + getMaskX(),e1.getY() + e1.getMaskY(), e1.getMaskW(), e1.getMaskH());
+        Rectangle e2Mask = new Rectangle(e2.getX() + getMaskX(),e2.getY() + e2.getMaskY(), e2.getMaskW(), e2.getMaskH());
 
         return e1Mask.intersects(e2Mask);
     }
 
     public void render(Graphics graphics) {
         graphics.drawImage(sprite, getX() - this.camera.getX(), getY() - this.camera.getY(), null);
-        graphics.setColor(Color.red);
-        graphics.fillRect(this.getX() + getMaskX() - this.camera.getX(),this.getY() + this.getMaskY() - this.camera.getY(),getMaskW(),getMaskH());
+//        graphics.setColor(Color.red);
+//        graphics.fillRect(this.getX() + getMaskX() - this.camera.getX(),this.getY() + this.getMaskY() - this.camera.getY(),getMaskW(),getMaskH());
     }
 
     public void tick() {

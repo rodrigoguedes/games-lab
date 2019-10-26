@@ -10,7 +10,8 @@ import java.awt.image.BufferedImage;
 public class Enemy extends Entity {
 
     public static final BufferedImage ENEMY_EN = Game.spritesheetWorld.getSprite(16 * 2, 16 * 0, 16, 16);
-    
+
+	// TODO change to double
     private int speed = 1;
 
 	private int frames = 0;
@@ -56,7 +57,7 @@ public class Enemy extends Entity {
 			Player player = this.getWorld().getPlayer();
 			if (Game.rand.nextInt(100) < 10) {
 				player.setLife(player.getLife() - 1);
-				System.out.println(player.getLife());
+				player.setDamaged(true);
 				if (player.getLife() <= 0) {
 					System.out.println("Gamer Over....");
 				}
@@ -101,7 +102,7 @@ public class Enemy extends Entity {
     	graphics.drawImage(sprites[index], this.getX()- getCamera().getX(), this.getY()- getCamera().getY(), null);
 
 		// To debug
-		graphics.setColor(Color.BLUE);
-		graphics.fillRect((this.getX() + this.getMaskX()) - getCamera().getX(), (this.getY() + this.getMaskY()) - getCamera().getY(), this.getMaskW(), this.getMaskH());
+//		graphics.setColor(Color.BLUE);
+//		graphics.fillRect((this.getX() + this.getMaskX()) - getCamera().getX(), (this.getY() + this.getMaskY()) - getCamera().getY(), this.getMaskW(), this.getMaskH());
 	}
 }

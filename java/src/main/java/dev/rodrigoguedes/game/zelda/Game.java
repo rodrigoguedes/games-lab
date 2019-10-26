@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.font.GlyphVector;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -59,9 +60,16 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	}
 
 	private void tick() {
-		for (Entity entity: entities) {
-			entity.tick();
+		for (int i = 0; i < entities.size(); i++) {
+			entities.get(i).tick();
 		}
+
+		// throws java.util.ConcurrentModificationException
+		// to avoid this may I can use ImmutableList (Guava or Native JDK)
+		// Move entities from Game to World
+//		for (Entity entity: entities) {
+//			entity.tick();
+//		}
 	}
 
 	private void render() {
@@ -86,6 +94,11 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		graphics.dispose();
 		graphics = bs.getDrawGraphics();
 		graphics.drawImage(layer, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
+
+		graphics.setFont(new Font("Arial", Font.BOLD, 20));
+		graphics.setColor(Color.WHITE);
+		graphics.drawString("Ammo: " + this.player.getAmmo(), 600, 20);
+
 		bs.show();
 	}
 
@@ -170,15 +183,20 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	}
 
 	public static void main(String[] args) {
+		//Workaround to remove slowness when calling drawString
+		//It is happen only on MACOS
+		GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+
 		Game game = new Game();
 
 		JFrame frame = new JFrame("Zelda");
-		frame.add(game);
 		frame.setResizable(false);
+		frame.add(game);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
+
 
 		game.start();
 	}
