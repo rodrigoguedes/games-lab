@@ -46,18 +46,26 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public Game() {
 		this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		this.addKeyListener(this);
-
 		this.layer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
 		this.camera = new Camera();
+
+//		this.entities = new ArrayList<Entity>();
+//		this.world = new World("/zelda/level1.png", this.entities, camera);
+//		this.player = new Player(16,16, 16, 32, spritesheet.getSprite(0, 0, 16, 32), camera, world);
+//		this.entities.add(player);
+//		this.ui = new UI(world);
+		startGame();
+	}
+
+	public void startGame() {
 		this.entities = new ArrayList<Entity>();
-
-		this.world = new World("/zelda/level1.png", this.entities, camera);
-
+		this.world = new World("/zelda/level1.png", this.entities, camera, this);
 		this.player = new Player(16,16, 16, 32, spritesheet.getSprite(0, 0, 16, 32), camera, world);
 		this.entities.add(player);
 		this.ui = new UI(world);
 	}
+
 
 	private void tick() {
 		for (int i = 0; i < entities.size(); i++) {
@@ -70,6 +78,11 @@ public class Game extends Canvas implements Runnable, KeyListener {
 //		for (Entity entity: entities) {
 //			entity.tick();
 //		}
+
+		for (int i = 0; i < world.getBullets().size(); i++) {
+			world.getBullets().get(i).tick();
+		}
+
 	}
 
 	private void render() {
@@ -86,6 +99,11 @@ public class Game extends Canvas implements Runnable, KeyListener {
         this.world.render(graphics);
 
 		for (Entity entity: entities) {
+			entity.render(graphics);
+		}
+
+		//Todo layers
+		for (Entity entity: world.getBullets()) {
 			entity.render(graphics);
 		}
 
@@ -166,6 +184,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			player.moveToUp();
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			player.moveToDown();
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_X) {
+			player.startShoot();
 		}
 	}
 

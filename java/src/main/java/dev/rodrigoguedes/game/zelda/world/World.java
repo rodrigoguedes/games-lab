@@ -19,14 +19,19 @@ public class World {
 
     private List<Entity> entities;
     private List<Enemy> enemies;
+    private List<Bullet> bullets;
 
     private Camera camera;
 
-    public World(String path, List<Entity> entities, Camera camera) {
+    private Game game;
+
+    public World(String path, List<Entity> entities, Camera camera, Game game) {
         try {
             this.enemies = new ArrayList<>();
+            this.bullets = new ArrayList<>();
             this.entities = entities;
             this.camera = camera;
+            this.game = game;
 
             BufferedImage map = ImageIO.read(getClass().getResource(path));
             int[] pixels = new int[map.getWidth() * map.getHeight()];
@@ -65,8 +70,8 @@ public class World {
                         lifePack.setMaskH(4);
                         this.entities.add(lifePack);
                     } else if (currentPixel == 0xFFFFD800) {
-                        //Bullet
-                        this.entities.add(new Bullet(x * 16, y * 16, 16, 16, Bullet.BULLET_EN, camera, this));
+                        //Ammo
+                        this.entities.add(new Ammo(x * 16, y * 16, 16, 16, Ammo.AMMO_EN, camera, this));
                     }
                 }
             }
@@ -75,7 +80,11 @@ public class World {
             e.printStackTrace();
         }
     }
-    
+
+    public Game getGame() {
+        return game;
+    }
+
     public Player getPlayer() {
     	Entity entity = this.entities.stream().filter(e -> e instanceof Player).findFirst().get();
     	return (Player) entity;
@@ -87,6 +96,10 @@ public class World {
 
     public List<Enemy> getEnemies() {
         return this.enemies;
+    }
+
+    public List<Bullet> getBullets() {
+        return bullets;
     }
 
     public boolean isFree(int xNext, int yNext) {
