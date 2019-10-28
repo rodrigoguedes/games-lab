@@ -137,16 +137,30 @@ public class Player extends Entity {
             }
         }
 
-        if (shoot sdafasdfdsasa) {
+        if (shoot) {
             shoot = false;
-            int dx = 0;
-            if (dir == right_dir) {
-                dx = 1;
-            } else if (dir == left_dir) {
-                dx = -1;
+            if (hasWeapon && ammo > 0) {
+                ammo--;
+                int dx = 0;
+                int dy = 0;
+                int px = 0;
+                int py = 6;
+                if (dir == right_dir) {
+                    px = 18;
+                    dx = 1;
+                } else if (dir == left_dir) {
+                    px = -8;
+                    dx = -1;
+                } else if (dir == up_dir) {
+                    py = -8;
+                    dy = -1;
+                } else if (dir == down_dir) {
+                    py = 18;
+                    dy = 1;
+                }
+                Bullet bullet = new Bullet(this.getX() + px, this.getY() + py, 3, 3, null, getCamera(), getWorld(), dx, dy);
+                getWorld().getBullets().add(bullet);
             }
-            Bullet bullet = new Bullet(this.getX(), this.getY(), 3, 3, null, getCamera(), getWorld(), dx, 0);
-            getWorld().getBullets().add(bullet);
         }
 
         if (life <= 0) {
@@ -207,50 +221,25 @@ public class Player extends Entity {
                 } else {
                     images = rightPlayer;
                 }
-
-//                if (moved) {
-//                    graphics.drawImage(images[index], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
-//                } else {
-//                    graphics.drawImage(images[0], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
-//                }
             } else if (dir == left_dir) {
                 if (hasWeapon) {
                     images = leftPlayerWeapon;
                 } else {
                     images = leftPlayer;
                 }
-
-//                if (moved) {
-//                    graphics.drawImage(images[index], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
-//                } else {
-//                    graphics.drawImage(images[0], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
-//                }
             } else if (dir == up_dir) {
                 if (hasWeapon) {
                     images = upPlayerWeapon;
                 } else {
                     images = upPlayer;
                 }
-
-//                if (moved) {
-//                    graphics.drawImage(images[index], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
-//                } else {
-//                    graphics.drawImage(images[0], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
-//                }
             } else if (dir == down_dir) {
                 if (hasWeapon) {
                     images = downPlayerWeapon;
                 } else {
                     images = downPlayer;
                 }
-
-//                if (moved) {
-//                    graphics.drawImage(images[index], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
-//                } else {
-//                    graphics.drawImage(images[0], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
-//                }
             }
-
             if (moved) {
                 graphics.drawImage(images[index], getX() - this.getCamera().getX(), getY() - this.getCamera().getY(), null);
             } else {
@@ -259,8 +248,6 @@ public class Player extends Entity {
         } else {
             graphics.drawImage(playerDamage, this.getX() - this.getCamera().getX(), this.getY() - this.getCamera().getY(), null);
         }
-
-
     }
 
     public void startShoot() {

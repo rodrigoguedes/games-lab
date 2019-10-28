@@ -10,18 +10,25 @@ public class Bullet extends Entity {
 
     private int directionX;
     private int directionY;
-    private int speed = 2;
+    private int speed = 4;
+
+    private int life = 30;
+    private int currentLife = 0;
 
     public Bullet(int x, int y, int width, int height, BufferedImage sprite, Camera camera, World world, int dx, int dy) {
         super(x, y, width, height, sprite, camera, world);
-//        this.directionX = dx;
-//        this.directionY = dy;
+        this.directionX = dx;
+        this.directionY = dy;
     }
 
     @Override
     public void tick() {
         setX(getX() + (directionX * speed));
         setY(getY() + (directionY * speed));
+        currentLife++;
+        if (currentLife == life) {
+            this.getWorld().getBullets().remove(this);
+        }
     }
 
     @Override
