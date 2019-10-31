@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import dev.rodrigoguedes.game.zelda.Game;
+import dev.rodrigoguedes.game.zelda.GameState;
 import dev.rodrigoguedes.game.zelda.world.Camera;
 import dev.rodrigoguedes.game.zelda.world.World;
 
@@ -29,7 +30,7 @@ public class Player extends Entity {
     private int maxIndex = 2;
     private boolean moved = false;
 
-    private double life = 100;
+    private double life = 10;
     private double maxLife = 100;
 
     private int ammo = 0;
@@ -194,7 +195,8 @@ public class Player extends Entity {
         }
 
         if (life <= 0) {
-            getWorld().getGame().startGame();
+//            getWorld().getGame().startGame();
+            getWorld().getGame().setGameState(GameState.GAME_OVER);
         }
 
         this.getCamera().setX(Camera.clamp(this.getX() - (Game.WIDTH/2), 0, this.getWorld().getWidth() * 16 - Game.WIDTH));

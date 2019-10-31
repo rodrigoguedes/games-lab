@@ -93,7 +93,8 @@ public class Enemy extends Entity {
     }
 
 	public void destroySelf() {
-		this.getWorld().getEntities().remove(this);
+		this.getWorld().getEnemies().remove(this);
+    	this.getWorld().getEntities().remove(this);
 	}
 
 	public void isCollidingBullet() {

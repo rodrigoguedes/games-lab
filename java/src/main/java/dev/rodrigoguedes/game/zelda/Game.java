@@ -36,6 +36,11 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 	private BufferedImage layer;
 
+	private int currentLevel = 1;
+	private int maxLevel = 2;
+
+	private GameState gameState = GameState.NORMAL;
+
 	private Player player;
 	private World world;
 	private Camera camera;
@@ -63,7 +68,11 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 	public void startGame() {
 		this.entities = new ArrayList<Entity>();
-		this.world = new World("/zelda/level1.png", this.entities, camera, this);
+		String levelMap = String.format("/zelda/level%d.png", currentLevel);
+
+		System.out.println(levelMap);
+
+		this.world = new World(levelMap, this.entities, camera, this);
 		this.player = new Player(16,16, 16, 32, spritesheet.getSprite(0, 0, 16, 32), camera, world);
 		this.entities.add(player);
 		this.ui = new UI(world);
@@ -71,21 +80,31 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 
 	private void tick() {
-		for (int i = 0; i < entities.size(); i++) {
-			entities.get(i).tick();
+		if (gameState == GameState.NORMAL) {
+			for (int i = 0; i < entities.size(); i++) {
+				entities.get(i).tick();
+			}
+
+			// throws java.util.ConcurrentModificationException
+			// to avoid this may I can use ImmutableList (Guava or Native JDK)
+			// Move entities from Game to World
+			//		for (Entity entity: entities) {
+			//			entity.tick();
+			//		}
+
+			for (int i = 0; i < world.getBullets().size(); i++) {
+				world.getBullets().get(i).tick();
+			}
+
+			if (world.getEnemies().size() == 0) {
+				currentLevel++;
+				if (currentLevel > maxLevel) {
+					currentLevel = 1;
+				}
+
+				startGame();
+			}
 		}
-
-		// throws java.util.ConcurrentModificationException
-		// to avoid this may I can use ImmutableList (Guava or Native JDK)
-		// Move entities from Game to World
-//		for (Entity entity: entities) {
-//			entity.tick();
-//		}
-
-		for (int i = 0; i < world.getBullets().size(); i++) {
-			world.getBullets().get(i).tick();
-		}
-
 	}
 
 	private void render() {
@@ -119,6 +138,18 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		graphics.setFont(new Font("Arial", Font.BOLD, 20));
 		graphics.setColor(Color.WHITE);
 		graphics.drawString("Ammo: " + this.player.getAmmo(), 600, 20);
+
+		if (gameState == GameState.GAME_OVER) {
+			Graphics2D graphics2D = (Graphics2D) graphics;
+			graphics2D.setColor(new Color(0, 0, 0, 100));
+			graphics2D.fillRect(0, 0, WIDTH*SCALE, HEIGHT*SCALE);
+
+			graphics.setFont(new Font("Arial", Font.BOLD, 36));
+			graphics.setColor(Color.WHITE);
+			graphics.drawString("Game Over", WIDTH*SCALE / 2 - 50, HEIGHT*SCALE / 2 - 20);
+			graphics.setFont(new Font("Arial", Font.BOLD, 32));
+			graphics.drawString("Press Enter to continue", WIDTH*SCALE / 2 - 150, HEIGHT*SCALE / 2 + 20);
+		}
 
 		bs.show();
 	}
@@ -226,6 +257,14 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 	@Override
 	public void mouseExited(MouseEvent e) {
+	}
+
+	public GameState getGameState() {
+		return gameState;
+	}
+
+	public void setGameState(GameState gameState) {
+		this.gameState = gameState;
 	}
 
 	public static void main(String[] args) {
