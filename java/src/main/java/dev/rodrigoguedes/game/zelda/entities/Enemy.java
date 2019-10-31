@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 public class Enemy extends Entity {
 
     public static final BufferedImage ENEMY_EN = Game.spritesheetWorld.getSprite(16 * 2, 16 * 0, 16, 16);
+	public static final BufferedImage ENEMY_DAMAGE = Game.spritesheet.getSprite(16 * 10, 16 * 0, 16, 16);
 
 	// TODO change to double
     private int speed = 1;
@@ -18,6 +19,11 @@ public class Enemy extends Entity {
 	private int maxFrames = 20;
 	private int index = 0;
 	private int maxIndex = 1;
+
+	private int life = 10;
+
+	private boolean damaged = false;
+	private int damageFrames = 0;
 
 	private BufferedImage[] sprites;
 
@@ -70,7 +76,37 @@ public class Enemy extends Entity {
 				this.index = 0;
 			}
 		}
+
+		isCollidingBullet();
+
+		if (life <= 0) {
+			destroySelf();
+		}
+
+		if (isDamaged()) {
+			this.damageFrames++;
+			if (this.damageFrames == 8) {
+				this.damageFrames = 0;
+				this.setDamaged(false);
+			}
+		}
     }
+
+	public void destroySelf() {
+		this.getWorld().getEntities().remove(this);
+	}
+
+	public void isCollidingBullet() {
+		for (int i = 0; i < this.getWorld().getBullets().size(); i++) {
+			Entity e = this.getWorld().getBullets().get(i);
+			if (this.isColliding(this, e)) {
+				life--;
+				this.setDamaged(true);
+				this.getWorld().getBullets().remove(i);
+				return;
+			}
+		}
+	}
 
 	public boolean isCollidingWithPlayer() {
 		Rectangle enemyCurrent = new Rectangle(this.getX() + this.getMaskX(), this.getY() + this.getMaskY(), this.getMaskW(), this.getMaskH());
@@ -96,10 +132,22 @@ public class Enemy extends Entity {
 
 	@Override
 	public void render(Graphics graphics) {
-    	graphics.drawImage(sprites[index], this.getX()- getCamera().getX(), this.getY()- getCamera().getY(), null);
+    	if (!isDamaged()) {
+			graphics.drawImage(sprites[index], this.getX() - getCamera().getX(), this.getY() - getCamera().getY(), null);
+		} else {
+			graphics.drawImage(ENEMY_DAMAGE, this.getX() - getCamera().getX(), this.getY() - getCamera().getY(), null);
+		}
 
 		// To debug
 //		graphics.setColor(Color.BLUE);
 //		graphics.fillRect((this.getX() + this.getMaskX()) - getCamera().getX(), (this.getY() + this.getMaskY()) - getCamera().getY(), this.getMaskW(), this.getMaskH());
+	}
+
+	public boolean isDamaged() {
+		return damaged;
+	}
+
+	public void setDamaged(boolean damaged) {
+		this.damaged = damaged;
 	}
 }

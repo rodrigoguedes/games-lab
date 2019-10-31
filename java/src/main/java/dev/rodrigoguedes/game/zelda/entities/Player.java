@@ -39,6 +39,10 @@ public class Player extends Entity {
     private boolean hasWeapon = false;
 
     private boolean shoot = false;
+    private boolean mouseShoot = false;
+
+    private int mouseX;
+    private int mouseY;
     
     private BufferedImage[] rightPlayer = new BufferedImage[4];
     private BufferedImage[] leftPlayer = new BufferedImage[4];
@@ -163,6 +167,32 @@ public class Player extends Entity {
             }
         }
 
+        if (mouseShoot) {
+            mouseShoot = false;
+            if (hasWeapon && ammo > 0) {
+                ammo--;
+
+                int px;
+                int py = 8;
+
+                double angle;
+
+                if (dir == right_dir) {
+                    px = 8;
+                    angle = Math.atan2(mouseY - ((this.getY() + py) - this.getCamera().getY()), mouseX - ((this.getX() + 8) - this.getCamera().getX()));
+                } else {
+                    px = 8;
+                    angle = Math.atan2(mouseY - ((this.getY() + py) - this.getCamera().getY()), mouseX - ((this.getX() + 8) - this.getCamera().getX()));
+                }
+
+                double dx = Math.cos(angle);
+                double dy = Math.sin(angle);
+
+                Bullet bullet = new Bullet(this.getX() + px, this.getY() + py, 3, 3, null, getCamera(), getWorld(), dx, dy);
+                getWorld().getBullets().add(bullet);
+            }
+        }
+
         if (life <= 0) {
             getWorld().getGame().startGame();
         }
@@ -175,8 +205,8 @@ public class Player extends Entity {
         for(int i = 0; i < getWorld().getEntities().size(); i++){
             Entity current = getWorld().getEntities().get(i);
             if(current instanceof Ammo) {
-                if (isColidding(this, current)) {
-                    ammo += 10;
+                if (isColliding(this, current)) {
+                    ammo += 100;
                     getWorld().getEntities().remove(current);
                 }
             }
@@ -187,7 +217,7 @@ public class Player extends Entity {
         for(int i = 0; i < getWorld().getEntities().size(); i++){
             Entity current = getWorld().getEntities().get(i);
             if(current instanceof LifePack) {
-                if (isColidding(this, current)) {
+                if (isColliding(this, current)) {
                     life += 10;
                     if (life > 100) {
                         life = 100;
@@ -202,7 +232,7 @@ public class Player extends Entity {
         for(int i = 0; i < getWorld().getEntities().size(); i++){
             Entity current = getWorld().getEntities().get(i);
             if(current instanceof Weapon) {
-                if (isColidding(this, current)) {
+                if (isColliding(this, current)) {
                     hasWeapon = true;
                     getWorld().getEntities().remove(current);
                 }
@@ -250,12 +280,27 @@ public class Player extends Entity {
         }
     }
 
+    public void startMouseShoot(int mouseX, int mouseY) {
+        setMouseShoot(true);
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
+    }
+
+    public void stopMouseShoot() {
+        setMouseShoot(false);
+    }
+
+
     public void startShoot() {
         setShoot(true);
     }
 
     public void stopShoot() {
         setShoot(false);
+    }
+
+    public void setMouseShoot(boolean mouseShoot) {
+        this.mouseShoot = mouseShoot;
     }
 
     public boolean isShoot() {

@@ -8,14 +8,14 @@ import java.awt.image.BufferedImage;
 
 public class Bullet extends Entity {
 
-    private int directionX;
-    private int directionY;
+    private double directionX;
+    private double directionY;
     private int speed = 4;
 
     private int life = 30;
     private int currentLife = 0;
 
-    public Bullet(int x, int y, int width, int height, BufferedImage sprite, Camera camera, World world, int dx, int dy) {
+    public Bullet(int x, int y, int width, int height, BufferedImage sprite, Camera camera, World world, double dx, double dy) {
         super(x, y, width, height, sprite, camera, world);
         this.directionX = dx;
         this.directionY = dy;
@@ -23,8 +23,8 @@ public class Bullet extends Entity {
 
     @Override
     public void tick() {
-        setX(getX() + (directionX * speed));
-        setY(getY() + (directionY * speed));
+        setX(getX() + (int)(directionX * speed));
+        setY(getY() + (int)(directionY * speed));
         currentLife++;
         if (currentLife == life) {
             this.getWorld().getBullets().remove(this);

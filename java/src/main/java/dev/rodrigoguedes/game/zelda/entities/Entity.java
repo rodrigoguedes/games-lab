@@ -38,7 +38,7 @@ public class Entity {
         this.maskH = this.height;
     }
 
-    public boolean isColidding(Entity e1,Entity e2){
+    public boolean isColliding(Entity e1, Entity e2){
         Rectangle e1Mask = new Rectangle(e1.getX() + getMaskX(),e1.getY() + e1.getMaskY(), e1.getMaskW(), e1.getMaskH());
         Rectangle e2Mask = new Rectangle(e2.getX() + getMaskX(),e2.getY() + e2.getMaskY(), e2.getMaskW(), e2.getMaskH());
 
@@ -62,6 +62,8 @@ public class Entity {
         return world;
     }
 
+
+    //TODO Conver getX and getY to Double and create a method getIntY getIntX
     public int getX() {
         return x;
     }
