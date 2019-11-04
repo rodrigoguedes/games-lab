@@ -39,12 +39,15 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	private int currentLevel = 1;
 	private int maxLevel = 2;
 
-	private GameState gameState = GameState.NORMAL;
-
 	private Player player;
 	private World world;
 	private Camera camera;
 	private List<Entity> entities;
+
+	private GameState gameState = GameState.NORMAL;
+	private boolean showMessageGamerOver = true;
+	private int framesGameOver = 0;
+	private boolean restartGame = false;
 
 	private UI ui;
 
@@ -67,10 +70,11 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	}
 
 	public void startGame() {
+		this.restartGame = false;
+		this.gameState = GameState.NORMAL;
+
 		this.entities = new ArrayList<Entity>();
 		String levelMap = String.format("/zelda/level%d.png", currentLevel);
-
-		System.out.println(levelMap);
 
 		this.world = new World(levelMap, this.entities, camera, this);
 		this.player = new Player(16,16, 16, 32, spritesheet.getSprite(0, 0, 16, 32), camera, world);
@@ -81,6 +85,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 	private void tick() {
 		if (gameState == GameState.NORMAL) {
+			this.restartGame = false; //Workaround!!!! Refactory this!!!!
+
 			for (int i = 0; i < entities.size(); i++) {
 				entities.get(i).tick();
 			}
@@ -102,6 +108,21 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 					currentLevel = 1;
 				}
 
+				startGame();
+			}
+		} else if (gameState == GameState.GAME_OVER) {
+			this.framesGameOver++;
+			if (this.framesGameOver == 30) {
+				this.framesGameOver = 0;
+				if (this.showMessageGamerOver) {
+					this.showMessageGamerOver = false;
+				} else {
+					this.showMessageGamerOver = true;
+				}
+			}
+
+			if (restartGame) {
+				currentLevel = 1;
 				startGame();
 			}
 		}
@@ -148,7 +169,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 			graphics.setColor(Color.WHITE);
 			graphics.drawString("Game Over", WIDTH*SCALE / 2 - 50, HEIGHT*SCALE / 2 - 20);
 			graphics.setFont(new Font("Arial", Font.BOLD, 32));
-			graphics.drawString("Press Enter to continue", WIDTH*SCALE / 2 - 150, HEIGHT*SCALE / 2 + 20);
+			if (showMessageGamerOver) {
+				graphics.drawString(">Press Enter to continue<", WIDTH * SCALE / 2 - 150, HEIGHT * SCALE / 2 + 20);
+			}
 		}
 
 		bs.show();
@@ -214,7 +237,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 			player.moveToRight();
 		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			player.moveToLeft();
-		} else if (e.getKeyCode() == KeyEvent.VK_UP) {
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			player.moveToUp();
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			player.moveToDown();
@@ -222,6 +247,10 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 		if (e.getKeyCode() == KeyEvent.VK_X) {
 			player.startShoot();
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			this.restartGame = true;
 		}
 	}
 
