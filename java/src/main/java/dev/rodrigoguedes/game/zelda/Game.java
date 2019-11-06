@@ -2,6 +2,7 @@ package dev.rodrigoguedes.game.zelda;
 
 import dev.rodrigoguedes.game.zelda.entities.Entity;
 import dev.rodrigoguedes.game.zelda.entities.Player;
+import dev.rodrigoguedes.game.zelda.graphics.Menu;
 import dev.rodrigoguedes.game.zelda.graphics.Spritesheet;
 import dev.rodrigoguedes.game.zelda.graphics.UI;
 import dev.rodrigoguedes.game.zelda.world.Camera;
@@ -44,12 +45,14 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	private Camera camera;
 	private List<Entity> entities;
 
-	private GameState gameState = GameState.NORMAL;
+	private GameState gameState = GameState.MENU;
 	private boolean showMessageGamerOver = true;
 	private int framesGameOver = 0;
 	private boolean restartGame = false;
 
 	private UI ui;
+
+	private Menu menu;
 
 	public static final Random rand = new Random();
 
@@ -61,6 +64,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 		this.camera = new Camera();
 
+		this.menu = new Menu(this);
+
 //		this.entities = new ArrayList<Entity>();
 //		this.world = new World("/zelda/level1.png", this.entities, camera);
 //		this.player = new Player(16,16, 16, 32, spritesheet.getSprite(0, 0, 16, 32), camera, world);
@@ -71,7 +76,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 	public void startGame() {
 		this.restartGame = false;
-		this.gameState = GameState.NORMAL;
+		this.gameState = GameState.MENU;
 
 		this.entities = new ArrayList<Entity>();
 		String levelMap = String.format("/zelda/level%d.png", currentLevel);
@@ -125,6 +130,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 				currentLevel = 1;
 				startGame();
 			}
+		} else if (gameState == GameState.MENU) {
+			this.menu.tick();
 		}
 	}
 
@@ -172,6 +179,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 			if (showMessageGamerOver) {
 				graphics.drawString(">Press Enter to continue<", WIDTH * SCALE / 2 - 150, HEIGHT * SCALE / 2 + 20);
 			}
+		} else if (gameState == GameState.MENU) {
+			this.menu.render(graphics);
 		}
 
 		bs.show();
@@ -241,8 +250,17 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			player.moveToUp();
+
+			if (gameState == GameState.MENU) {
+				this.menu.moveToUp();
+			}
+
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			player.moveToDown();
+
+			if (gameState == GameState.MENU) {
+				this.menu.moveToDown();
+			}
 		}
 
 		if (e.getKeyCode() == KeyEvent.VK_X) {
