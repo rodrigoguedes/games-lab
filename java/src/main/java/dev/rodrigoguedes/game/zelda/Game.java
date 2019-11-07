@@ -269,6 +269,14 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			this.restartGame = true;
+			if (this.getGameState() == GameState.MENU) {
+				this.menu.setEnter(true);
+			}
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			this.setGameState(GameState.MENU);
+			this.menu.setPause(true);
 		}
 	}
 
