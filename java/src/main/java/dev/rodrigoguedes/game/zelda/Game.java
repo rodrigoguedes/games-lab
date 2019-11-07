@@ -5,6 +5,7 @@ import dev.rodrigoguedes.game.zelda.entities.Player;
 import dev.rodrigoguedes.game.zelda.graphics.Menu;
 import dev.rodrigoguedes.game.zelda.graphics.Spritesheet;
 import dev.rodrigoguedes.game.zelda.graphics.UI;
+import dev.rodrigoguedes.game.zelda.sound.Sound;
 import dev.rodrigoguedes.game.zelda.world.Camera;
 import dev.rodrigoguedes.game.zelda.world.World;
 
@@ -72,6 +73,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 //		this.entities.add(player);
 //		this.ui = new UI(world);
 		startGame();
+		Sound.backgroundGame.play();
 	}
 
 	public void startGame() {
